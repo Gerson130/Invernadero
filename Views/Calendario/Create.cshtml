@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Invernadero.Models.CalendarioDeRiego>
+@{
+	Invernadero.Models.CalendarioDeRiego calendario = new CalendarioDeRiego();
+	int Id = calendario.Id;
+	DateTime Fecha = calendario.Fecha.Date;
+	string Tipo = calendario.Tipo;
+	int NivelAgua = calendario.NivelAgua;
+}
+@{
+	ViewData["Title"] = "Crear calendario de riego";
+}
+
+<h2>Nuevo calendario de riego</h2>
+<br/>
+<form asp-action="Create">
+	<div asp-validation-summary="ModelOnly"></div>
+	<input type="hidden" asp-for="@Id"/>
+	<div class="row mb-4 m-1 p-2 justify-content-center">
+		<div class="col-md-5 bg-dark p-5 m-3 rounded-4">
+			<label asp-for="@Fecha" class="form-label text-light"></label>
+			<input asp-for="@Fecha" class="form-control" />
+			<span asp-validation-for="@Fecha" class="form-label"></span>
+		</div>
+		<div class="col-md-5 bg-dark p-5 m-3 rounded-4">
+			<label asp-for="@Tipo" class="form-label text-light"></label>
+			<select asp-for="@Tipo" class="form-select">
+				<option>Urgente</option>
+				<option>Preventiva</option>
+				<option>Casual</option>
+				<span asp-validation-for="@Tipo"/>
+			</select>
+			<br/>
+			<label asp-for="@NivelAgua" class="form-label text-light">Nivel de agua (ml)</label>
+			<input id="ml" asp-for="@NivelAgua" class="form-control" onclick="cero()"/>
+			<span asp-validation-for="@NivelAgua"/>
+			<br/>
+			<input type="submit" value="+   Agregar riego" class="form-control text-bg-success" />
+		</div>
+	</div>
+
+	<div>
+		<h3>Riegos programados</h3>
+		</br>
+		<table id="tabla" class="table table-dark table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Fecha</th>
+					<th scope="col">Tipo</th>
+					<th scope="col">Nivel de agua (ml)</th>
+					<th scope="col">Usuario</th>
+					<th scope="col">Acción</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.Fecha)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Tipo)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.NivelAgua)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.CalendarioRiegoUsuario.Count)
+						</td>
+						<td>
+							<form asp-action="Delete" method="post">
+								<div asp-validation-summary="ModelOnly"></div>
+								<input type="hidden" name="id" asp-for="@item.Id"/>
+								<div>
+									<input type="submit" value="Eliminar"/>
+								</div>
+							</form>
+						</td>
+					</tr>	
+				}
+			</tbody>
+
+		</table>
+	</div>
+</form>
+
