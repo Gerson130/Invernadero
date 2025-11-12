@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Invernadero.Models.Sensor>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Sensores Activos</h1>
+
+<div></div>
+
+<p>
+    <a asp-action="Create">Agregar Sensor</a>
+</p>
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ubicacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ubicacion)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn bg-warning">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn bg-info">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn bg-danger">Borrar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div class="bg-dark text-light p-1 m-3 rounded-4">
+    
+    <div class="row mb-4 m-1 p-1 justify-content-center">
+        <p>Instrucciones de conexión</p>
+        <div class="col-md-5 p-5 m-3 rounded-4">
+            <p>Conexión Wi-Fi</p>
+            <ol>
+                <li>Enciende el sensor y espera el modo de configuración</li>
+                <li>Conecta tu dispositivo a la red del sensor</li>
+                <li>Ingresa las credenciales de tu red Wi-Fi</li>
+                <li>El sensor se conectará automáticamente</li>
+            </ol>
+        </div>
+        <div class="col-md-5 p-5 m-3 rounded-4">
+            <p>Conexión Bluetooth</p>
+            <ol>
+                <li>Activa Bluetooth en tu dispositivo</li>
+                <li>Enciende el sensor</li>
+                <li>Busca dispositivos disponibles</li>
+                <li>Selecciona el sensor y empareja</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
