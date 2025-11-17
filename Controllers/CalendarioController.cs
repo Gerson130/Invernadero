@@ -38,12 +38,12 @@ namespace Invernadero.Controllers
             if (id == null)
                 return NotFound();
 
-            var calendario = await _context.CalendarioDeRiego.FindAsync(id);
+            var especialidad = await _context.CalendarioDeRiego.FindAsync(id);
 
-            if (calendario == null)
+            if (especialidad == null)
                 return NotFound();
 
-            return View(calendario);
+            return View(especialidad);
         }
 
         [HttpPost]
