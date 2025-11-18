@@ -1,8 +1,55 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Invernadero.Controllers;
+
+@{
+    ViewData["Title"] = "Principal";
+    var notificaciones = ViewBag.NotificacionesRiego as List<NotificacionViewModel>;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Bienvenido Invernadero</h1>
 </div>
+
+<hr />
+
+@if (notificaciones != null && notificaciones.Any())
+{
+    <div class="alert alert-info shadow-sm" role="alert">
+        <h5 class="alert-heading">Alerta de Riego Programado</h5>
+        <ul style="list-style: none; padding-left: 0;">
+            @foreach (var notificacion in notificaciones)
+            {
+                <li class="p-1">
+                    <span class="badge bg-primary me-2">PENDIENTE</span> @notificacion.Mensaje
+                </li>
+            }
+        </ul>
+        <p class="mb-0 mt-2">Revisa tu calendario de riego para más detalles.</p>
+    </div>
+}
+else
+{
+    <div class="alert alert-success" role="alert">
+        No hay riegos pendientes programados por el momento
+    </div>
+}
+
+<hr />
+@if (notificaciones != null && notificaciones.Any())
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Tienes riegos pendientes hoy:</h4>
+        <ul>
+            @foreach (var notificacion in notificaciones)
+            {
+                <li>@notificacion.Mensaje</li>
+            }
+        </ul>
+        <p class="mb-0">Asegurate de realizar el riego a tiempo para mantener el ambiente optimo</p>
+    </div>
+} 
+else
+{
+    <div class="alert alert-success" role="alert">
+        No hay riegos programados para el resto del dia
+    </div>
+}
