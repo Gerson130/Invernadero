@@ -9,7 +9,7 @@
 <div></div>
 
 <p>
-    <a asp-action="Create">Agregar Sensor</a>
+    <a asp-action="Create" class="btn btn-success">Agregar Sensor</a>
 </p>
 <table class="table table-dark table-hover">
     <thead>
@@ -33,9 +33,9 @@
                 @Html.DisplayFor(modelItem => item.Ubicacion)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn bg-warning">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn bg-info">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn bg-danger">Borrar</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Borrar</a>
             </td>
         </tr>
 }

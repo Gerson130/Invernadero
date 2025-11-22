@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Invernadero.Models;
+using Invernadero.ViewModels;
 
 namespace Invernadero.Controllers
 {
@@ -16,6 +17,62 @@ namespace Invernadero.Controllers
         public SensorsController(InvernaderoContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("api/sensors/registrartempohum")]
+        public async Task<IActionResult> RegistrarTemperaturaHumedad([FromQuery] RegistroViewModel modelo)
+        {
+            if (modelo == null || modelo.SensorId <= 0)
+            {
+                return BadRequest("Datos de entrada inválidos o ID de Sensor no proporcionado");
+            }
+
+            var nuevoRegistro = new Registro
+            {
+                Humedad = modelo.Humedad,
+                Temperatura = modelo.Temperatura,
+                Hora = DateTime.Now
+            };
+
+            _context.Registro.Add(nuevoRegistro);
+            await _context.SaveChangesAsync();
+
+            var registroSensor = new RegistroSensor
+            {
+                IdRegistro = nuevoRegistro.Id,
+                IdSensor = modelo.SensorId
+            };
+
+            _context.RegistroSensor.Add(registroSensor);
+
+            await _context.SaveChangesAsync();
+
+            string mensajeAlerta = "";
+
+            if (modelo.Humedad < 75 || modelo.Humedad > 85)
+            {
+                mensajeAlerta += $"Humedad ({modelo.Humedad}%) fuera del rango óptimo (alrededor del 80%)";
+            }
+            if (modelo.Temperatura < 18 || modelo.Temperatura > 24)
+            {
+                mensajeAlerta += $"Temperatura ({modelo.Temperatura}°C) fuera del rango óptimo (18°C - 24°C)";
+            }
+
+            if (!string.IsNullOrEmpty(mensajeAlerta))
+            {
+                return Ok(new
+                {
+                    Status = "Datos guardados. ¡Alerta!",
+                    Alerta = mensajeAlerta
+                });
+            }
+
+            return Ok(new
+            {
+                Status = "Datos guardados correctamente",
+                Humedad = modelo.Humedad,
+                Temperatura = modelo.Temperatura
+            });
         }
 
         // GET: Sensors
@@ -154,3 +211,4 @@ namespace Invernadero.Controllers
         }
     }
 }
+
