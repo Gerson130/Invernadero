@@ -21,7 +21,7 @@ public class HomeController : Controller
         _context = context;
     }
 
-    // Método Index() unificado con lógica RF2 y RF7
+    // Método Index() unificado con lógica
     public async Task<IActionResult> Index()
     {
         var now = DateTime.Now;
