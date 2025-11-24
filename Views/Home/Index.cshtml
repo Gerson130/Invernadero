@@ -2,54 +2,81 @@
 
 @{
     ViewData["Title"] = "Principal";
-    var notificaciones = ViewBag.NotificacionesRiego as List<NotificacionViewModel>;
+    var notificaciones = ViewBag.NotificacionesRiego as List<HomeController.NotificacionViewModel>;
+    var datosSensor = ViewBag.DatosTiempoReal as DatosTiempoRealViewModel;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Bienvenido Invernadero</h1>
+    <h1 class="display-4">Bienvenido al Monitoreo de Orquídeas</h1>
+    <p>El sistema notifica cuándo es el momento de regar las orquídeas a través de notificaciones (RF2).</p>
 </div>
 
 <hr />
 
+<h2>Alertas y Riego Programado</h2>
 @if (notificaciones != null && notificaciones.Any())
 {
-    <div class="alert alert-info shadow-sm" role="alert">
-        <h5 class="alert-heading">Alerta de Riego Programado</h5>
-        <ul style="list-style: none; padding-left: 0;">
+    <div class="alert alert-warning shadow-sm" role="alert">
+        <h4 class="alert-heading">¡Atención! Riegos Pendientes Hoy</h4>
+        <p>Asegúrate de realizar los siguientes riegos a tiempo para mantener el ambiente óptimo:</p>
+        <ul style="padding-left: 20px;">
             @foreach (var notificacion in notificaciones)
             {
-                <li class="p-1">
-                    <span class="badge bg-primary me-2">PENDIENTE</span> @notificacion.Mensaje
+                <li>
+                    <strong>@notificacion.Mensaje</strong>
                 </li>
             }
         </ul>
-        <p class="mb-0 mt-2">Revisa tu calendario de riego para más detalles.</p>
+        <hr class="my-2">
+        <p class="mb-0 text-small">Revisa tu calendario para confirmar los detalles.</p>
     </div>
 }
 else
 {
     <div class="alert alert-success" role="alert">
-        No hay riegos pendientes programados por el momento
+        No hay riegos pendientes programados para el resto del día.
     </div>
 }
 
 <hr />
-@if (notificaciones != null && notificaciones.Any())
+
+<h2>Visualización de Datos en Tiempo Real</h2>
+@if (datosSensor != null)
 {
-    <div class="alert alert-warning" role="alert">
-        <h4 class="alert-heading">Tienes riegos pendientes hoy:</h4>
-        <ul>
-            @foreach (var notificacion in notificaciones)
-            {
-                <li>@notificacion.Mensaje</li>
-            }
-        </ul>
-        <p class="mb-0">Asegurate de realizar el riego a tiempo para mantener el ambiente optimo</p>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Humedad Relativa</h5>
+                    <p class="card-text display-4">
+                        @datosSensor.Humedad%
+                    </p>
+                    <p class="card-text text-muted">Óptimo: ~80%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Temperatura</h5>
+                    <p class="card-text display-4">
+                        @datosSensor.Temperatura°C
+                    </p>
+                    <p class="card-text text-muted">Rango: 18ºC – 24ºC</p>
+                </div>
+            </div>
+        </div>
     </div>
-} 
+
+    <p class="text-end text-small text-muted mt-2">
+        Último registro capturado: @datosSensor.HoraRegistro.ToString("dd/MM/yyyy HH:mm:ss")
+    </p>
+
+}
 else
 {
-    <div class="alert alert-success" role="alert">
-        No hay riegos programados para el resto del dia
+    <div class="alert alert-info">
+        Esperando los primeros datos del sensor. Asegúrate de que el microcontrolador esté encendido y enviando lecturas.
     </div>
 }
