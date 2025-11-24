@@ -26,7 +26,7 @@ public class HomeController : Controller
     {
         var now = DateTime.Now;
 
-        // --- Lógica RF2 (Notificaciones de Riego) ---
+        // Notificaciones de Riego
         var riegosPendientes = await _context.CalendarioDeRiego
             .Where(c => c.Fecha.Date == now.Date && c.Fecha > now)
             .OrderBy(c => c.Fecha)
@@ -35,14 +35,11 @@ public class HomeController : Controller
         var notificaciones = riegosPendientes
             .Select(r => new NotificacionViewModel
             {
-                // Incluimos la hora para que la notificación sea útil
                 Mensaje = $"¡Riego Pendiente! Tipo: {r.Tipo} ({r.NivelAgua} ml). Programado para: {r.Fecha:HH:mm}."
             })
             .ToList();
 
         ViewBag.NotificacionesRiego = notificaciones;
-
-        // --- Lógica RF7 (Visualización en Tiempo Real) ---
 
         // Obtener el último registro histórico por hora descendente
         var ultimoRegistro = await _context.Registro
@@ -79,15 +76,14 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    // View Model de Notificación de Riego (RF2)
+    // View Model de Notificación de Riego
     public class NotificacionViewModel
     {
         public string Mensaje { get; set; }
     }
 }
 
-// View Model de Datos de Tiempo Real (RF7)
-// Definido fuera de la clase HomeController para que sea más fácil de usar en la vista.
+// View Model de Datos de Tiempo Real
 public class DatosTiempoRealViewModel
 {
     public decimal Humedad { get; set; }
